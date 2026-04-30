@@ -1,1 +1,35 @@
 
+#q1
+
+//save this code as index.js
+//crete 3 files with names fil1.txt,file2.txt,file3.txt
+//Add some text in each file
+//command on terminal to run code :- node index.js
+
+const fs = require('fs').promises; // Using fs promises API
+
+// Array of file names
+const files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
+// Function to read a single file and return a promise
+function readFileAsync(fileName) {
+    return fs.readFile(fileName, 'utf8'); // Returns a promise
+}
+
+// Async function to read all files
+async function readAllFiles() {
+    try {
+        // Read all files concurrently using Promise.all
+        const results = await Promise.all(files.map(readFileAsync));
+
+        // Display the contents of each file
+        results.forEach((content, index) => {
+            console.log(`Content of ${files[index]}:\n${content}\n`);
+        });
+    } catch (error) {
+        console.error('Error reading files:', error);
+    }
+}
+
+// Call the async function
+readAllFiles();
