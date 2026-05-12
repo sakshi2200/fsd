@@ -1,111 +1,105 @@
+Q.1) Create a Node.js file that writes an HTML form, with an upload field.
+
+__Node.js
+
+const http = require("http");
+const fs = require("fs");
+const formidable = require("formidable");
+
+http.createServer(function (req, res) {
+    if (req.url == "/upload") {
+        const form = new formidable.IncomingForm();
+
+        form.parse(req, function (err, fields, files) {
+            const oldPath = files.file.filepath;
+            const newPath = __dirname + "/" + files.file.originalFilename;
+
+            fs.rename(oldPath, newPath, function (err) {
+                if (err) throw err;
+                res.write("File uploaded successfully!");
+                res.end();
+            });
+        });
+    } else {
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.write(`
+            <html>
+            <body>
+                <h2>File Upload Form</h2>
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <input type="file" name="file"><br><br>
+                    <input type="submit" value="Upload">
+                </form>
+            </body>
+            </html>
+        `);
+        res.end();
+    }
+}).listen(3000);
+
+__ Run Steps
+npm init -y
+npm install formidable
+node app.js
+
+Open browser → http://localhost:3000
 
 
-Slip 5
-Q.1)	Create a Node.js file that writes an HTML form, with an upload field.
-
-const express = require('express');
-const path = require('path');
-const multer = require('multer');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Set up multer for handling file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-  }
-});
-
-const upload = multer({ storage: storage });
-
-// Set up the route to serve the form
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-// Handle file upload
-app.post('/upload', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send('No files were uploaded.');
-  }
-  res.send('File uploaded successfully.');
-});
-
-// Serve static files from the 'uploads' directory
-app.use('/uploads', express.static('uploads'));
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-Index .html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File Upload</title>
-</head>
-<body>
-  <h2>Upload File</h2>
-  <form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" id="file">
-    <button type="submit">Upload</button>
-  </form>
-</body>
-</html>
-
-Q.2) Using angular js create a SPA to carry out validation for a username entered in a textbox. If the textbox is blank, alert “Enter username”. If the number of characters is less than three, alert ‟ Username is too short”. If value entered is appropriate the print “Valid username” and password should be minimum 8 characters.
+Q.2) Using angular js create a SPA to carry out validation for a username entered 
+in a textbox. If the textbox is blank, alert “Enter username”. If the number of 
+characters is less than three, alert ‟ Username is too short”. If value entered 
+is appropriate the print “Valid username” and password should be minimum 8 characters.
 
 <!DOCTYPE html>
-<html lang="en" ng-app="validationApp">
+<html ng-app="myApp">
 <head>
-    <meta charset="UTF-8">
-    <title>Username Validation</title>
+    <title>Username Validation SPA</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
-<body ng-controller="MainController as vm">
-    <h1>Username Validation</h1>
-    
-    <form ng-submit="vm.validateUsername()">
-        <label for="username">Username:</label>
-        <input type="text" id="username" ng-model="vm.username" required>
+<body ng-controller="myController">
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" ng-model="vm.password" required>
+<h2>User Validation Form</h2>
 
-        <button type="submit">Submit</button>
-    </form>
+<form ng-submit="validate()">
 
-    <div ng-show="vm.message">
-        {{ vm.message }}
-    </div>
+    Username:<br>
+    <input type="text" ng-model="username"><br><br>
 
-    <script src="app.js"></script>
+    Password:<br>
+    <input type="password" ng-model="password"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<h3>{{message}}</h3>
+
+<script>
+var app = angular.module("myApp", []);
+
+app.controller("myController", function($scope) {
+
+    $scope.validate = function() {
+
+        if (!$scope.username || $scope.username.trim() === "") {
+            alert("Enter username");
+            return;
+        }
+
+        if ($scope.username.length < 3) {
+            alert("Username is too short");
+            return;
+        }
+
+        if (!$scope.password || $scope.password.length < 8) {
+            alert("Password should be minimum 8 characters");
+            return;
+        }
+
+        $scope.message = "Valid username";
+    };
+
+});
+</script>
+
 </body>
 </html>
-
-App.js
-
-angular.module('validationApp', [])
-    .controller('MainController', function() {
-        var vm = this;
-
-        vm.validateUsername = function() {
-            if (!vm.username) {
-                vm.message = "Enter username";
-            } else if (vm.username.length < 3) {
-                vm.message = "Username is too short";
-            } else if (!vm.password || vm.password.length < 8) {
-                vm.message = "Password should be minimum 8 characters";
-            } else {
-                vm.message = "Valid username";
-            }
-        };
-    });
