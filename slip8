@@ -1,78 +1,71 @@
-Slip 8
+Q.1) Create a Simple Web Server using node js
 
-Q.1)	Create a Simple Web Server using node js
+__(app.js)
 
-const http = require('http');
+const http = require("http");
 
-// Create a server
-const server = http.createServer((req, res) => {
-    // Set the response HTTP header with HTTP status and Content type
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    
-    // Send the response body "Hello World"
-    res.end('Hello World\n');
+const server = http.createServer(function(req, res) {
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.write("<h2>Welcome to Simple Node.js Web Server</h2>");
+    res.end();
 });
 
-// Define the port on which the server will listen
-const PORT = process.env.PORT || 3000;
+server.listen(3000);
 
-// Start the server
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+____Run
+node app.js
 
-Q2) Using angular js display the 10 student details in Table format (using ng-repeat directive use Array to store data)
+____Open browser:
+http://localhost:3000
+
+
+Q.2) Using angular js display the 10 student details in Table format 
+    (using ng-repeat directive use Array to store data)
+
+
 <!DOCTYPE html>
-<html lang="en" ng-app="studentApp">
+<html ng-app="myApp">
 <head>
-    <meta charset="UTF-8">
-    <title>Student Details</title>
+    <title>Student Table</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
-<body ng-controller="StudentController as vm">
-    <h1>Student Details</h1>
+<body ng-controller="myController">
 
-    <!-- Table to display student details -->
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Grade</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Use ng-repeat to iterate over the array of student objects -->
-            <tr ng-repeat="student in vm.students">
-                <td>{{ student.id }}</td>
-                <td>{{ student.name }}</td>
-                <td>{{ student.age }}</td>
-                <td>{{ student.grade }}</td>
-            </tr>
-        </tbody>
-    </table>
+<h2>Student Details</h2>
 
-    <script>
-        angular.module('studentApp', [])
-            .controller('StudentController', function() {
-                var vm = this;
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+    </tr>
 
-                // Array to store student details
-                vm.students = [
-                    { id: 1, name: 'John Doe', age: 20, grade: 'A' },
-                    { id: 2, name: 'Jane Smith', age: 22, grade: 'B' },
-                    { id: 3, name: 'David Johnson', age: 21, grade: 'A' },
-                    { id: 4, name: 'Emily Brown', age: 19, grade: 'C' },
-                    { id: 5, name: 'Michael Wilson', age: 20, grade: 'B' },
-                    { id: 6, name: 'Emma Martinez', age: 23, grade: 'A' },
-                    { id: 7, name: 'Christopher Taylor', age: 21, grade: 'A' },
-                    { id: 8, name: 'Olivia Garcia', age: 22, grade: 'B' },
-                    { id: 9, name: 'James Rodriguez', age: 20, grade: 'A' },
-                    { id: 10, name: 'Sophia Hernandez', age: 19, grade: 'C' }
-                ];
-            });
-    </script>
+    <tr ng-repeat="student in students">
+        <td>{{student.id}}</td>
+        <td>{{student.name}}</td>
+        <td>{{student.age}}</td>
+    </tr>
+</table>
+
+<script>
+var app = angular.module("myApp", []);
+
+app.controller("myController", function($scope) {
+    $scope.students = [
+        {id: 1, name: "Amit", age: 20},
+        {id: 2, name: "Rahul", age: 21},
+        {id: 3, name: "Sneha", age: 19},
+        {id: 4, name: "Priya", age: 22},
+        {id: 5, name: "Kiran", age: 20},
+        {id: 6, name: "Neha", age: 21},
+        {id: 7, name: "Rohit", age: 23},
+        {id: 8, name: "Pooja", age: 20},
+        {id: 9, name: "Vikas", age: 22},
+        {id: 10, name: "Anjali", age: 19}
+    ];
+});
+</script>
+
 </body>
 </html>
 
