@@ -1,0 +1,95 @@
+Q.1) Using angular js Create a SPA that show Syllabus content of all subjects 
+     of M.Sc (CS) Sem-II (use ng-view)
+
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>MSc CS Sem-II Syllabus</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
+</head>
+<body>
+
+<h2>M.Sc (CS) Sem-II Syllabus</h2>
+
+<a href="#!ds">Data Science</a> |
+<a href="#!os">Operating System</a> |
+<a href="#!java">Java</a>
+
+<div ng-view></div>
+
+<script>
+var app = angular.module("myApp", ["ngRoute"]);
+
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/ds", {
+        template: "<h3>Data Science</h3><p>Data preprocessing, visualization, ML basics</p>"
+    })
+    .when("/os", {
+        template: "<h3>Operating System</h3><p>Processes, scheduling, memory management</p>"
+    })
+    .when("/java", {
+        template: "<h3>Java</h3><p>OOP concepts, collections, exception handling</p>"
+    })
+    .otherwise({
+        template: "<h3>Welcome</h3><p>Select a subject to view syllabus</p>"
+    });
+});
+</script>
+
+</body>
+</html>
+
+
+Q.2) Using angular js display the 10 student details in Table format 
+   (using ng-repeat directive use Array to store data)
+
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Student Table</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="myController">
+
+<h2>Student Details</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+    </tr>
+
+    <tr ng-repeat="s in students">
+        <td>{{s.id}}</td>
+        <td>{{s.name}}</td>
+        <td>{{s.age}}</td>
+    </tr>
+</table>
+
+<script>
+var app = angular.module("myApp", []);
+
+app.controller("myController", function($scope) {
+    $scope.students = [
+        {id: 1, name: "Amit", age: 20},
+        {id: 2, name: "Rahul", age: 21},
+        {id: 3, name: "Sneha", age: 19},
+        {id: 4, name: "Priya", age: 22},
+        {id: 5, name: "Kiran", age: 20},
+        {id: 6, name: "Neha", age: 21},
+        {id: 7, name: "Rohit", age: 23},
+        {id: 8, name: "Pooja", age: 20},
+        {id: 9, name: "Vikas", age: 22},
+        {id: 10, name: "Anjali", age: 19}
+    ];
+});
+</script>
+
+</body>
+</html>
+
