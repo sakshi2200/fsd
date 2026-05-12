@@ -1,0 +1,104 @@
+Q.1) Create a Node.js file that demonstrate create student database and table in MySQL
+
+__app.js
+
+
+const mysql = require("mysql");
+
+const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: ""
+});
+
+con.connect(function(err) {
+    if (err) throw err;
+
+    con.query("CREATE DATABASE studentdb", function(err, result) {
+        if (err) throw err;
+        console.log("Database created");
+    });
+
+    const con2 = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "studentdb"
+    });
+
+    con2.connect(function(err) {
+        if (err) throw err;
+
+        const sql = "CREATE TABLE students (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), age INT)";
+        con2.query(sql, function(err, result) {
+            if (err) throw err;
+            console.log("Table created");
+        });
+    });
+});
+
+
+__Run
+npm install mysql
+node app.js
+
+
+Q.2) Using angular js create a SPA to carry out validation for a username entered in a textbox.
+ If the textbox is blank, alert “Enter username”. If the number of characters is less than three,
+ alert ‟ Username is too short”. If value entered is appropriate the print “Valid username”
+  and password should be minimum 8 characters
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Username Validation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="myController">
+
+<h2>User Validation Form</h2>
+
+<form ng-submit="validate()">
+
+    Username:<br>
+    <input type="text" ng-model="username"><br><br>
+
+    Password:<br>
+    <input type="password" ng-model="password"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<h3>{{message}}</h3>
+
+<script>
+var app = angular.module("myApp", []);
+
+app.controller("myController", function($scope) {
+
+    $scope.validate = function() {
+
+        if (!$scope.username || $scope.username.trim() === "") {
+            alert("Enter username");
+            return;
+        }
+
+        if ($scope.username.length < 3) {
+            alert("Username is too short");
+            return;
+        }
+
+        if (!$scope.password || $scope.password.length < 8) {
+            alert("Password should be minimum 8 characters");
+            return;
+        }
+
+        $scope.message = "Valid username";
+    };
+
+});
+</script>
+
+</body>
+</html>
+
