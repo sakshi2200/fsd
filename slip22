@@ -1,0 +1,118 @@
+Q.1) Using node js create an Employee Registration Form validation.
+
+
+__1. index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Registration</title>
+</head>
+<body>
+
+<h2>Employee Registration Form</h2>
+
+<form action="/register" method="post">
+    Name:<br>
+    <input type="text" name="name"><br><br>
+
+    Email:<br>
+    <input type="text" name="email"><br><br>
+
+    Mobile:<br>
+    <input type="text" name="mobile"><br><br>
+
+    Salary:<br>
+    <input type="text" name="salary"><br><br>
+
+    <input type="submit" value="Register">
+</form>
+
+</body>
+</html>
+
+
+__2. app.js
+
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
+
+app.post("/register", (req, res) => {
+    const { name, email, mobile, salary } = req.body;
+
+    const namePattern = /^[A-Za-z ]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const mobilePattern = /^[0-9]{10}$/;
+    const salaryPattern = /^[0-9]+$/;
+
+    if (!namePattern.test(name)) {
+        return res.send("Invalid Name");
+    }
+
+    if (!emailPattern.test(email)) {
+        return res.send("Invalid Email");
+    }
+
+    if (!mobilePattern.test(mobile)) {
+        return res.send("Invalid Mobile Number");
+    }
+
+    if (!salaryPattern.test(salary)) {
+        return res.send("Invalid Salary");
+    }
+
+    res.send("Employee Registered Successfully");
+});
+
+app.listen(3000);
+
+
+__Run
+npm init -y
+npm install express body-parser
+node app.js
+
+Open:
+http://localhost:3000
+
+
+Q.2) Create a js file named main.js for event-driven application. There should be a main  
+loop that listens for events, and then triggers a callback function when one of those events is detected.
+
+
+
+__main.js
+
+const EventEmitter = require("events");
+
+const eventEmitter = new EventEmitter();
+
+eventEmitter.on("login", function(user) {
+    console.log("User logged in:", user);
+});
+
+eventEmitter.on("logout", function(user) {
+    console.log("User logged out:", user);
+});
+
+console.log("Main loop listening for events...");
+
+setTimeout(function() {
+    eventEmitter.emit("login", "Admin");
+}, 2000);
+
+setTimeout(function() {
+    eventEmitter.emit("logout", "Admin");
+}, 4000);
+
+
+___Run
+node main.js
