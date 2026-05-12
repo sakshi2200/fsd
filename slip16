@@ -1,0 +1,110 @@
+S16 Q1
+//simple-recipe-book/
+├── public/
+│   └── index.html
+├── app.js
+├── package.json
+
+//index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Recipe</title>
+</head>
+<body>
+  <h1>Recipe Submission</h1>
+  <form action="/recipes" method="POST">
+    <label>Title: <input type="text" name="title" required></label><br><br>
+    <label>Ingredients:<br>
+      <textarea name="ingredients" rows="4" cols="40" required></textarea>
+    </label><br><br>
+    <label>Instructions:<br>
+      <textarea name="instructions" rows="4" cols="40" required></textarea>
+    </label><br><br>
+    <button type="submit">Add Recipe</button>
+  </form>
+</body>
+</html>
+
+//app.js
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const path = require('path');
+
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true })); // For form data
+app.use(bodyParser.json());                         // For JSON data
+app.use(express.static('public'));                  // Serve HTML from /public
+
+// MongoDB connect
+mongoose.connect('mongodb://localhost:27017/recipes', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
+
+// Recipe model
+const Recipe = mongoose.model('Recipe', new mongoose.Schema({
+  title: String,
+  ingredients: String,
+  instructions: String
+}));
+
+// Routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.post('/recipes', async (req, res) => {
+  const { title, ingredients, instructions } = req.body;
+  const newRecipe = new Recipe({ title, ingredients, instructions });
+  await newRecipe.save();
+  res.send('<h2>Recipe saved!</h2><a href="/">Add another</a>');
+});
+
+// Start server
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+
+//To run 
+//mongod
+//node app.js
+
+S16 Q2
+//main.js
+const EventEmitter = require('events');
+
+// Create an instance of EventEmitter
+const eventEmitter = new EventEmitter();
+
+// Define event listeners (callback functions)
+eventEmitter.on('greet', (name) => {
+  console.log(`Hello, ${name}!`);
+});
+
+eventEmitter.on('exit', () => {
+  console.log('Exiting program...');
+  process.exit();
+});
+
+// Simulated "main loop"
+let count = 0;
+const names = ['Alice', 'Bob', 'Charlie'];
+
+const interval = setInterval(() => {
+  if (count < names.length) {
+    // Emit 'greet' event
+    eventEmitter.emit('greet', names[count]);
+    count++;
+  } else {
+    // Emit 'exit' event
+    eventEmitter.emit('exit');
+    clearInterval(interval);
+  }
+}, 1000); // Emit every 1 second
+
+//to run 
+//node main.js
+
+
