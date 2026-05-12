@@ -1,112 +1,84 @@
-Slip 9
-Create a Node.js file that writes an HTML form, with a concatenate two string
-const http = require('http');
+Q.1) Create a Node.js file that writes an HTML form, with a concatenate two string.
 
-// Create an HTTP server
-const server = http.createServer((req, res) => {
-    // Check if the request method is POST
-    if (req.method === 'POST') {
-        let data = '';
+__ Node.js File (app.js)
 
-        // Collect data from the request
-        req.on('data', (chunk) => {
-            data += chunk;
+const http = require("http");
+const querystring = require("querystring");
+
+http.createServer(function(req, res) {
+
+    if (req.method === "POST") {
+        let body = "";
+
+        req.on("data", function(chunk) {
+            body += chunk;
         });
 
-        // When all data is received
-        req.on('end', () => {
-            // Parse the form data
-            const formData = decodeURIComponent(data);
-            const params = formData.split('&');
-            const firstString = params[0].split('=')[1];
-            const secondString = params[1].split('=')[1];
+        req.on("end", function() {
+            const data = querystring.parse(body);
+            const result = data.str1 + data.str2;
 
-            // Concatenate the strings
-            const result = firstString + secondString;
-
-            // Send the response with the result
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(`
-                <html>
-                <head>
-                    <title>String Concatenation Result</title>
-                </head>
-                <body>
-                    <h1>String Concatenation Result</h1>
-                    <p>First String: ${firstString}</p>
-                    <p>Second String: ${secondString}</p>
-                    <p>Concatenated Result: ${result}</p>
-                </body>
-                </html>
-            `);
+            res.writeHead(200, {"Content-Type": "text/html"});
+            res.write("<h2>Concatenated String: " + result + "</h2>");
+            res.end();
         });
+
     } else {
-        // If request method is not POST, send the HTML form
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(`
+        res.writeHead(200, {"Content-Type": "text/html"});
+        res.write(`
             <html>
-            <head>
-                <title>String Concatenation Form</title>
-            </head>
             <body>
-                <h1>String Concatenation Form</h1>
-                <form method="post" action="/">
-                    <label for="firstString">First String:</label>
-                    <input type="text" id="firstString" name="firstString"><br><br>
-                    <label for="secondString">Second String:</label>
-                    <input type="text" id="secondString" name="secondString"><br><br>
-                    <button type="submit">Concatenate</button>
+                <h2>Concatenate Two Strings</h2>
+                <form method="post">
+                    Enter String 1: <input type="text" name="str1"><br><br>
+                    Enter String 2: <input type="text" name="str2"><br><br>
+                    <input type="submit" value="Concatenate">
                 </form>
             </body>
             </html>
         `);
+        res.end();
     }
-});
 
-// Define the port on which the server will listen
-const PORT = process.env.PORT || 3000;
+}).listen(3000);
 
-// Start the server
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+__Run
+node app.js
 
-Q.2) Create a Node.js file that opens the requested file and returns the content to the client If anything goes wrong, throw a 404 error
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+__Open:
+http://localhost:3000
 
-// Create an HTTP server
-const server = http.createServer((req, res) => {
-    // Get the file path from the request URL
-    const filePath = path.join(__dirname, req.url);
 
-    // Read the file
-    fs.readFile(filePath, (err, data) => {
+Q.2) Create a Node.js file that opens the requested file and returns the content to the client
+If anything goes wrong, throw a 404 error
+
+
+__Node.js File (app.js)
+
+
+const http = require("http");
+const fs = require("fs");
+const url = require("url");
+
+http.createServer(function(req, res) {
+    const q = url.parse(req.url, true);
+    const filename = "." + q.pathname;
+
+    fs.readFile(filename, function(err, data) {
         if (err) {
-            if (err.code === 'ENOENT') {
-                // If the file doesn't exist, throw a 404 error
-                res.writeHead(404, { 'Content-Type': 'text/plain' });
-                res.end('404 Not Found');
-            } else {
-                // If there's any other error, throw a 500 error
-                res.writeHead(500, { 'Content-Type': 'text/plain' });
-                res.end('500 Internal Server Error');
-            }
+            res.writeHead(404, {"Content-Type": "text/html"});
+            res.end("404 Not Found");
         } else {
-            // If the file is successfully read, send its content back to the client
-            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.writeHead(200, {"Content-Type": "text/html"});
             res.end(data);
         }
     });
-});
+}).listen(3000);
 
-// Define the port on which the server will listen
-const PORT = process.env.PORT || 3000;
 
-// Start the server
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+__Run
+node app.js
 
+Open in browser:
+http://localhost:3000/index.html
 
