@@ -1,1 +1,68 @@
+Slip 6
+Q.1)	Write angular JS by using ng-click directive to display an alert message after clicking the element.
+<!DOCTYPE html>
+<html lang="en" ng-app="alertApp">
+<head>
+    <meta charset="UTF-8">
+    <title>ng-click Directive Example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="MainController as vm">
+    <h1>ng-click Directive Example</h1>
+    
+    <!-- Button with ng-click directive -->
+    <button ng-click="vm.displayAlert()">Click Me</button>
+
+    <script>
+        angular.module('alertApp', [])
+            .controller('MainController', function() {
+                var vm = this;
+
+                vm.displayAlert = function() {
+                    alert("Button clicked!");
+                };
+            });
+    </script>
+</body>
+</html>
+
+Q.2) Create a Node.js file that opens the requested file and returns the content to the client. If anything goes wrong, throw a 404 error.
+
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const server = http.createServer((req, res) => {
+    // Get the file path from the request URL
+    const filePath = path.join(__dirname, req.url);
+
+    // Check if the file exists
+    fs.exists(filePath, (exists) => {
+        if (exists) {
+            // Read the file
+            fs.readFile(filePath, (err, data) => {
+                if (err) {
+                    // If there's an error reading the file, throw a 500 error
+                    res.writeHead(500, { 'Content-Type': 'text/plain' });
+                    res.end('Internal Server Error');
+                } else {
+                    // Return the file content
+                    res.writeHead(200, { 'Content-Type': 'text/plain' });
+                    res.end(data);
+                }
+            });
+        } else {
+            // If the file doesn't exist, throw a 404 error
+            res.writeHead(404, { 'Content-Type': 'text/plain' });
+            res.end('404 Not Found');
+        }
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
 
