@@ -1,110 +1,93 @@
-S16 Q1
-//simple-recipe-book/
-├── public/
-│   └── index.html
-├── app.js
-├── package.json
+Q.1) Using node js create a Recipe Book.
 
-//index.html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Add Recipe</title>
-</head>
-<body>
-  <h1>Recipe Submission</h1>
-  <form action="/recipes" method="POST">
-    <label>Title: <input type="text" name="title" required></label><br><br>
-    <label>Ingredients:<br>
-      <textarea name="ingredients" rows="4" cols="40" required></textarea>
-    </label><br><br>
-    <label>Instructions:<br>
-      <textarea name="instructions" rows="4" cols="40" required></textarea>
-    </label><br><br>
-    <button type="submit">Add Recipe</button>
-  </form>
-</body>
-</html>
+__(app.js)
 
-//app.js
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const path = require('path');
+const express = require("express");
+const bodyParser = require("body-parser");
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true })); // For form data
-app.use(bodyParser.json());                         // For JSON data
-app.use(express.static('public'));                  // Serve HTML from /public
 
-// MongoDB connect
-mongoose.connect('mongodb://localhost:27017/recipes', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('MongoDB connected'))
-  .catch(err => console.error(err));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Recipe model
-const Recipe = mongoose.model('Recipe', new mongoose.Schema({
-  title: String,
-  ingredients: String,
-  instructions: String
-}));
+let recipes = [];
 
-// Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get("/", function(req, res) {
+    let html = `
+        <h2>Recipe Book</h2>
+        <form method="post" action="/add">
+            Recipe Name:<br>
+            <input type="text" name="name"><br><br>
+            Ingredients:<br>
+            <input type="text" name="ingredients"><br><br>
+            <input type="submit" value="Add Recipe">
+        </form>
+        <h3>Recipes:</h3>
+        <ul>
+    `;
+
+    recipes.forEach(function(r) {
+        html += `<li><b>${r.name}</b>: ${r.ingredients}</li>`;
+    });
+
+    html += "</ul>";
+    res.send(html);
 });
 
-app.post('/recipes', async (req, res) => {
-  const { title, ingredients, instructions } = req.body;
-  const newRecipe = new Recipe({ title, ingredients, instructions });
-  await newRecipe.save();
-  res.send('<h2>Recipe saved!</h2><a href="/">Add another</a>');
+app.post("/add", function(req, res) {
+    recipes.push({
+        name: req.body.name,
+        ingredients: req.body.ingredients
+    });
+    res.redirect("/");
 });
 
-// Start server
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+app.listen(3000);
 
-//To run 
-//mongod
-//node app.js
+__Run
+npm init -y
+npm install express body-parser
+node app.js
 
-S16 Q2
-//main.js
-const EventEmitter = require('events');
+Open:
+http://localhost:3000
 
-// Create an instance of EventEmitter
-const eventEmitter = new EventEmitter();
 
-// Define event listeners (callback functions)
-eventEmitter.on('greet', (name) => {
-  console.log(`Hello, ${name}!`);
+Q.2) Create a js file named main.js for event-driven application. There should be a main 
+loop that listens for events, and then triggers a call-back function when one of those events is detected.
+
+__main.js
+
+
+const EventEmitter = require("events");
+
+const emitter = new EventEmitter();
+
+emitter.on("start", function() {
+    console.log("Start event triggered");
 });
 
-eventEmitter.on('exit', () => {
-  console.log('Exiting program...');
-  process.exit();
+emitter.on("process", function(data) {
+    console.log("Processing:", data);
 });
 
-// Simulated "main loop"
-let count = 0;
-const names = ['Alice', 'Bob', 'Charlie'];
+emitter.on("end", function() {
+    console.log("End event triggered");
+});
 
-const interval = setInterval(() => {
-  if (count < names.length) {
-    // Emit 'greet' event
-    eventEmitter.emit('greet', names[count]);
-    count++;
-  } else {
-    // Emit 'exit' event
-    eventEmitter.emit('exit');
-    clearInterval(interval);
-  }
-}, 1000); // Emit every 1 second
+console.log("Main loop listening for events...");
 
-//to run 
-//node main.js
+setTimeout(function() {
+    emitter.emit("start");
+}, 1000);
 
+setTimeout(function() {
+    emitter.emit("process", "Sample Data");
+}, 2000);
+
+setTimeout(function() {
+    emitter.emit("end");
+}, 3000);
+
+__Run
+node main.js
 
