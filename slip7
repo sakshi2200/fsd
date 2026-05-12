@@ -1,1 +1,64 @@
 
+Slip 7
+Q.1)	Create angular JS Application that show the current Date and Time of the System (Use Interval Service)
+<!DOCTYPE html>
+<html lang="en" ng-app="dateTimeApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Date and Time</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="DateTimeController as vm">
+    <h1>Current Date and Time</h1>
+    
+    <p>{{ vm.currentDateTime }}</p>
+
+    <script>
+        angular.module('dateTimeApp', [])
+            .controller('DateTimeController', function($interval) {
+                var vm = this;
+
+                // Function to update current date and time
+                function updateDateTime() {
+                    vm.currentDateTime = new Date().toLocaleString();
+                }
+
+                // Call the updateDateTime function initially
+                updateDateTime();
+
+                // Update current date and time every second using $interval
+                var intervalPromise = $interval(updateDateTime, 1000);
+
+                // Cancel the interval when the controller is destroyed
+                vm.$onDestroy = function() {
+                    $interval.cancel(intervalPromise);
+                };
+            });
+    </script>
+</body>
+</html>
+
+Q.2) Create a node js file named main.js for event-driven application. There should be a main loop that listens for events, and then triggers a callback function when one of those events is detected
+
+const EventEmitter = require('events');
+
+// Create an instance of EventEmitter
+const eventEmitter = new EventEmitter();
+
+// Define a callback function to handle the 'customEvent' event
+function customEventHandler() {
+    console.log('Custom event detected');
+}
+
+// Listen for the 'customEvent' event and trigger the callback function
+eventEmitter.on('customEvent', customEventHandler);
+
+// Main loop to listen for events
+console.log('Event listener started. Waiting for events...');
+
+// Simulate events being detected (for demonstration purposes)
+setTimeout(() => {
+    // Emit the 'customEvent' event after 3 seconds
+    eventEmitter.emit('customEvent');
+}, 3000);
+
