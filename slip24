@@ -1,0 +1,118 @@
+Q.1) Using node js create an eLearning System
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>eLearning System</title>
+</head>
+<body>
+
+<h2>Available Courses</h2>
+
+<form action="/enroll" method="post">
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Select Course:</label><br>
+    <select name="course">
+        <option value="Full Stack Development">Full Stack Development</option>
+        <option value="Data Science">Data Science</option>
+        <option value="Machine Learning">Machine Learning</option>
+    </select><br><br>
+
+    <input type="submit" value="Enroll">
+</form>
+
+</body>
+</html>
+
+__ Node.js File (app.js)
+
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
+
+app.post("/enroll", (req, res) => {
+    const name = req.body.name;
+    const course = req.body.course;
+
+    res.send("<h2>" + name + " enrolled in " + course + " successfully!</h2>");
+});
+
+app.listen(3000, () => {
+    console.log("Server running at http://localhost:3000");
+});
+
+__Steps to Run
+
+npm init -y
+npm install express body-parser
+node app.js
+
+
+Q.2) Using angular js create a SPA to carry out validation for a username entered in a textbox. 
+ If the textbox is blank, alert “Enter username”. If the number of characters is less than three,
+ alert ‟ Username is too short”. If value entered is appropriate the print
+ “Valid username” and password should be minimum 8 characters
+
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Username Validation SPA</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="myController">
+
+<h2>User Validation</h2>
+
+<form ng-submit="validate()">
+
+    Username:<br>
+    <input type="text" ng-model="username"><br><br>
+
+    Password:<br>
+    <input type="password" ng-model="password"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+<h3>{{message}}</h3>
+
+<script>
+var app = angular.module("myApp", []);
+
+app.controller("myController", function($scope) {
+
+    $scope.validate = function() {
+
+        if (!$scope.username || $scope.username.trim() === "") {
+            alert("Enter username");
+            return;
+        }
+
+        if ($scope.username.length < 3) {
+            alert("Username is too short");
+            return;
+        }
+
+        if (!$scope.password || $scope.password.length < 8) {
+            alert("Password should be minimum 8 characters");
+            return;
+        }
+
+        $scope.message = "Valid username";
+    };
+
+});
+</script>
+
+</body>
+</html>
+
