@@ -1,64 +1,66 @@
 
-Slip 7
-Q.1)	Create angular JS Application that show the current Date and Time of the System (Use Interval Service)
+Q.1) Create angular JS Application that show the current Date 
+ and Time of the System (Use Interval Service)
+
+
 <!DOCTYPE html>
-<html lang="en" ng-app="dateTimeApp">
+<html ng-app="myApp">
 <head>
-    <meta charset="UTF-8">
-    <title>Current Date and Time</title>
+    <title>Date & Time</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
-<body ng-controller="DateTimeController as vm">
-    <h1>Current Date and Time</h1>
-    
-    <p>{{ vm.currentDateTime }}</p>
+<body ng-controller="myController">
 
-    <script>
-        angular.module('dateTimeApp', [])
-            .controller('DateTimeController', function($interval) {
-                var vm = this;
+<h2>Current Date and Time</h2>
 
-                // Function to update current date and time
-                function updateDateTime() {
-                    vm.currentDateTime = new Date().toLocaleString();
-                }
+<h3>{{currentDateTime | date:'yyyy-MM-dd HH:mm:ss'}}</h3>
 
-                // Call the updateDateTime function initially
-                updateDateTime();
+<script>
+var app = angular.module("myApp", []);
 
-                // Update current date and time every second using $interval
-                var intervalPromise = $interval(updateDateTime, 1000);
+app.controller("myController", function($scope, $interval) {
 
-                // Cancel the interval when the controller is destroyed
-                vm.$onDestroy = function() {
-                    $interval.cancel(intervalPromise);
-                };
-            });
-    </script>
+    $scope.currentDateTime = new Date();
+
+    $interval(function() {
+        $scope.currentDateTime = new Date();
+    }, 1000);
+
+});
+</script>
+
 </body>
 </html>
 
-Q.2) Create a node js file named main.js for event-driven application. There should be a main loop that listens for events, and then triggers a callback function when one of those events is detected
 
-const EventEmitter = require('events');
+Q.2) Create a node js file named main.js for event-driven application.
+ There should be a main loop that listens for events, and then triggers
+ a callback function when one of those events is detected.
 
-// Create an instance of EventEmitter
+
+__main.js
+
+const EventEmitter = require("events");
+
 const eventEmitter = new EventEmitter();
 
-// Define a callback function to handle the 'customEvent' event
-function customEventHandler() {
-    console.log('Custom event detected');
-}
+eventEmitter.on("greet", function(name) {
+    console.log("Hello " + name);
+});
 
-// Listen for the 'customEvent' event and trigger the callback function
-eventEmitter.on('customEvent', customEventHandler);
+eventEmitter.on("bye", function() {
+    console.log("Goodbye!");
+});
 
-// Main loop to listen for events
-console.log('Event listener started. Waiting for events...');
+console.log("Waiting for events...");
 
-// Simulate events being detected (for demonstration purposes)
-setTimeout(() => {
-    // Emit the 'customEvent' event after 3 seconds
-    eventEmitter.emit('customEvent');
-}, 3000);
+setTimeout(function() {
+    eventEmitter.emit("greet", "Student");
+}, 2000);
 
+setTimeout(function() {
+    eventEmitter.emit("bye");
+}, 4000);
+
+__Run
+node main.js
