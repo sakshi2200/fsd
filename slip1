@@ -1,35 +1,160 @@
-
-#q1
-
-//save this code as index.js
-//crete 3 files with names fil1.txt,file2.txt,file3.txt
-//Add some text in each file
-//command on terminal to run code :- node index.js
-
-const fs = require('fs').promises; // Using fs promises API
-
-// Array of file names
-const files = ['file1.txt', 'file2.txt', 'file3.txt'];
-
-// Function to read a single file and return a promise
-function readFileAsync(fileName) {
-    return fs.readFile(fileName, 'utf8'); // Returns a promise
-}
-
-// Async function to read all files
-async function readAllFiles() {
-    try {
-        // Read all files concurrently using Promise.all
-        const results = await Promise.all(files.map(readFileAsync));
-
-        // Display the contents of each file
-        results.forEach((content, index) => {
-            console.log(`Content of ${files[index]}:\n${content}\n`);
-        });
-    } catch (error) {
-        console.error('Error reading files:', error);
+Slip 1
+1) Create an HTML form for Login and write a JavaScript to validate email ID and Password using Regular Expression.  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Form</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
     }
-}
+    form {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    .error {
+        color: red;
+    }
+</style>
+</head>
+<body>
 
-// Call the async function
-readAllFiles();
+<form id="loginForm" onsubmit="return validateForm()">
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" placeholder="Enter your email" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    <input type="submit" value="Login">
+</form>
+
+<script>
+    function validateForm() {
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+            document.getElementById('email').classList.add('error');
+            return false;
+        } else {
+            document.getElementById('email').classList.remove('error');
+        }
+
+        // Password should be at least 8 characters long
+        if (password.length < 8) {
+            document.getElementById('password').classList.add('error');
+            return false;
+        } else {
+            document.getElementById('password').classList.remove('error');
+        }
+
+        return true;
+    }
+</script>
+
+</body>
+</html>
+
+2)  Create an HTML form that contain the Student Registration details and write a JavaScript to validate Student first and last name as it should not contain other than alphabets and age should be between 18 to 50.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration Form</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    form {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    .error {
+        color: red;
+    }
+</style>
+</head>
+<body>
+
+<form id="registrationForm" onsubmit="return validateForm()">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" placeholder="Enter your age" required>
+    <input type="submit" value="Register">
+</form>
+
+<script>
+    function validateForm() {
+        var firstName = document.getElementById('firstName').value;
+        var lastName = document.getElementById('lastName').value;
+        var age = parseInt(document.getElementById('age').value);
+
+        var namePattern = /^[a-zA-Z]+$/;
+
+        if (!namePattern.test(firstName)) {
+            document.getElementById('firstName').classList.add('error');
+            return false;
+        } else {
+            document.getElementById('firstName').classList.remove('error');
+        }
+
+        if (!namePattern.test(lastName)) {
+            document.getElementById('lastName').classList.add('error');
+            return false;
+        } else {
+            document.getElementById('lastName').classList.remove('error');
+        }
+
+        // Age should be between 18 and 50
+        if (age < 18 || age > 50 || isNaN(age)) {
+            document.getElementById('age').classList.add('error');
+            return false;
+        } else {
+            document.getElementById('age').classList.remove('error');
+        }
+        return true;
+    }
+</script>
+</body>
+</html>
+
