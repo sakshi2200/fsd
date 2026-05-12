@@ -1,0 +1,94 @@
+Slip 2
+Q.1)	Create a Node.js file that will convert the output "Full Stack!" into reverse string.
+
+
+// app.js
+
+// Define the string
+const originalString = "Full Stack!";
+
+// Function to reverse a string
+function reverseString(str) {
+    return str.split('').reverse().join('');
+}
+
+// Convert the original string to reverse
+const reversedString = reverseString(originalString);
+
+console.log(reversedString);
+
+To run this code:
+1.	Install Node.js if you haven't already.
+2.	Save the code above into a file named app.js.
+3.	Open your terminal or command prompt.
+4.	Navigate to the directory where app.js is saved.
+5.	Run the command node app.js.
+6.	You should see the output printed in the terminal as the reverse of "Full Stack!", which is "!kcatS lluF".
+
+
+Q.2) Using node js create a web page to read two file names from user and append contents of first file into second file.
+1.	First, make sure you have Node.js installed on your system.
+2.	Initialize a new Node.js project by running npm init -y in your project directory.
+3.	Install Express.js by running npm install express.
+4.	Create a new file named app.js and paste the following code:
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+
+const app = express();
+const port = 3000;
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.post('/mergeFiles', (req, res) => {
+    const { file1, file2 } = req.body;
+
+    // Read content from the first file
+    fs.readFile(file1, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        // Append content of first file to the second file
+        fs.appendFile(file2, data, (err) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            res.send('Contents appended successfully!');
+        });
+    });
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+
+5.	Create a directory named public in the same directory where app.js is located.
+6.	Create a new file named index.html inside the public directory and paste the following HTML code:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merge Files</title>
+</head>
+<body>
+    <h1>Merge Files</h1>
+    <form action="/mergeFiles" method="post">
+        <label for="file1">File 1:</label>
+        <input type="text" id="file1" name="file1" required><br>
+        <label for="file2">File 2:</label>
+        <input type="text" id="file2" name="file2" required><br>
+        <button type="submit">Merge Files</button>
+    </form>
+</body>
+</html>
+7.	Run the Node.js application by executing node app.js.
+8.	Open your web browser and navigate to http://localhost:3000.
+9.	Enter the filenames of the two files you want to merge into the respective input fields and click the "Merge Files" button.
+
